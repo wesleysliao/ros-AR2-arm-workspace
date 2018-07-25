@@ -1,0 +1,14 @@
+2018-07-24
+==========
+Using linux mint 19 as base OS, installing ROS melodic.
+Upgraded from linux mint 18 before installing.
+Problem installing package ros-melodic-desktop-full, although most subpackages seem to have installed
+
+
+
+2018-07-25
+==========
+Some packages didn't finish upgrading, was able to upgrade most, still some remaining.
+Retried installing package ros-melodic-desktop-full, completed successfully.
+initialized rosdep
+added "source /opt/ros/melodic/setup.bash" to ~/.bashrc
