@@ -1,0 +1,10 @@
+[submodule "src/ROS_AR2_urdf"]
+	path = src/ROS_AR2_urdf
+	url = https://github.com/Chris-Annin/ROS_AR2_urdf.git
+[submodule "src/ROS_AR2_moveit_config"]
+	path = src/ROS_AR2_moveit_config
+	url = https://github.com/Chris-Annin/ROS_AR2_moveit_config.git
+[submodule "src/moveit_visual_tools"]
+	path = src/moveit_visual_tools
+	url = https://github.com/ros-planning/moveit_visual_tools.git
+	branch = melodic-devel
