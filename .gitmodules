@@ -8,3 +8,6 @@
 	path = src/moveit_visual_tools
 	url = https://github.com/ros-planning/moveit_visual_tools.git
 	branch = melodic-devel
+[submodule "src/gazebo_ros_demos"]
+	path = src/gazebo_ros_demos
+	url = https://github.com/ros-simulation/gazebo_ros_demos.git

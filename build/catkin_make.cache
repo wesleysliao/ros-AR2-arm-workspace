@@ -1,2 +1,0 @@
-
--DCATKIN_DEVEL_PREFIX=/home/wesley/Sources/AR2arm_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/wesley/Sources/AR2arm_workspace/install -G Unix Makefiles

@@ -1,9 +1,15 @@
+Wesley Liao
+wesliao@iu.edu
+Indiana University
+
+Record of steps taken in setup and development of a ROS environment for the AR2 open source robot arm.
+
+
 2018-07-24
 ==========
 Using linux mint 19 as base OS, installing ROS melodic.
 Upgraded from linux mint 18 before installing.
 Problem installing package ros-melodic-desktop-full, although most subpackages seem to have installed
-
 
 
 2018-07-25
@@ -12,3 +18,74 @@ Some packages didn't finish upgrading, was able to upgrade most, still some rema
 Retried installing package ros-melodic-desktop-full, completed successfully.
 initialized rosdep
 added "source /opt/ros/melodic/setup.bash" to ~/.bashrc
+
+created catkin workspace AR2arm_workspace
+initialized git repo wesleysliao/ros-AR2-arm-workspace
+
+added submodules Chris-Annin/
+
+added submodules ros-planning/moveit_tutorials and ros-planning/panda_moveit_config
+Attempting to build gives dependency error "Could NOT find moveit_visual_tools"
+No package in ros repo for melodic yet I think... 
+Adding from source using "git submodule add --branch debian/melodic/bionic/moveit_visual_tools https://github.com/PickNikRobotics/moveit_visual_tools-release.git"
+compiling needs rvis_visual_tools, fixed using rosdep
+error: ‘TransformListener’ is not a member of ‘tf’ when compiling
+switched to moveit_visual_tools melodic devel instead of release, compiles fine
+
+compilation error in moveit_tutorials in pick_place_tutorial.cpp, error: ‘tf’ has not been declared
+ig
+
+removed moveit tutorials and panda config, reattempt later if necessary. I think the ar2 config files will be enough. Not sure I need moveit_visual_tools now but I'll leave it in.
+
+AR2 can be used in moveit with command:
+roslaunch ar2_moveit_config demo.launch
+
+
+2018-07-31
+==========
+To develop an interface node to take the moveit joint angles and send appropriate commands to the AR2 arduino, I first need to learn how communication between the AR2 software and the arduino is accomplished. Ideally the arduino code will not need to be changed, allowing the robot to be used with either the ROS environment or the AR2 1.5 software provided by Annin, with no redownloading of arduino code.
+
+From reading AR2.1.5_arduino_sketch.ino:
+
+AR2 1.5 Arduino Serial Commands:
+	Notes: 
+	> Serial communication is at 9600 Baud
+	> All commands are strings, with string decimal integer numbers where numbers are used. 
+	> Arduino controller will "hang" after beginning a command until the command is completed.
+	> Commands should end with a carriage return ("\n"), which signals the end of the command and starts execution of the command
+	> Commands sent while the controller is executing a command will be stored in the arduino serial buffer (64 bytes). Any overflow of the buffer is discarded.
+
+
+	SV - Move servo
+		Format: SV+servoNum+P+servoPos
+	
+	WT - Wait time
+		Format: WTS+timeSeconds
+
+	JF - IF input then jump
+		Format: JFX+inputNum+T+tabNum  
+
+	ON - Set output on
+		Format: ONX+outputNum
+
+	OF - Set output off
+		Format: OFX+outputNum
+
+	WI - Wait input on
+		Format: WIN+inputNum
+
+	WO - Wait input off
+		Format: WON+inputNum
+
+	LL - Calibrate
+		Format: LLABCDEFS
+		LL+A+J1caldrive+J1step+B+J2caldrive+J2step+C+J3caldrive+J3step+D+J4caldrive+J4step+E+J5caldrive+J5step+F+J6caldrive+J6step+S+str(speed)  
+
+	MJ - Move joints
+		Format: MJABCDEFTGHIKS
+		MJA+J1dir+J1steps+B+J2dir+J2steps+C+J3dir+J3steps+D+J4dir+J4steps+E+J5dir+J5steps+F+J6dir+J6steps+T+TRdir+TRstep+S+newSpeed+G+ACCdur+H+ACCspd+I+DECdur+K+DECspd
+
+		Resets current positions of all joints
+		Sets direction outputs for all controllers
+
+		While (joint position counts are less than their calculated targets)
